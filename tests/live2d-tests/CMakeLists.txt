@@ -76,7 +76,7 @@ elseif(LINUX)
     list(APPEND GAME_SOURCE ${common_content_files})
 elseif(EMSCRIPTEN)
     list(APPEND GAME_SOURCE
-         proj.emscripten/main.cpp
+         proj.wasm/main.cpp
          )
     list(APPEND GAME_SOURCE ${common_content_files})
 elseif(WINDOWS)
@@ -194,4 +194,8 @@ endif()
 
 if (NOT DEFINED BUILD_ENGINE_DONE)
     ax_uwp_set_all_targets_deploy_min_version()
+endif()
+
+if (WASM)
+    ax_setup_wasm_app_config(${APP_NAME})
 endif()

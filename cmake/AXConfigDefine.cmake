@@ -166,29 +166,43 @@ function(use_ax_compile_define target)
     endif()
 endfunction()
 
-# Set compiler options
+# Set compiler options for engine lib: axmol
 function(use_ax_compile_options target)
     if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         # Enable msvc multi-process building
         target_compile_options(${target} PUBLIC /MP)
+    elseif(WASM)
+        # refer to: https://github.com/emscripten-core/emscripten/blob/main/src/settings.js
+        target_link_options(${target} PUBLIC -sFORCE_FILESYSTEM=1 -sFETCH=1 -sUSE_GLFW=3)
     endif()
 endfunction()
 
-# softfp for android armv7a?
-# if(ANDROID)
-# 	if(${ANDROID_ABI} STREQUAL "armeabi-v7a")
-#         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfloat-abi=softfp")
-#         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfloat-abi=softfp")
-# 	endif()
-# endif()
-
 if(EMSCRIPTEN)
-    set(AX_COMPILE_FLAGS "-s USE_LIBJPEG=1 -s USE_LIBPNG=1 -s USE_ZLIB=1")
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        string(APPEND AX_COMPILE_FLAGS " -gsource-map")
+    set(AX_WASM_THREADS "navigator.hardwareConcurrency" CACHE STRING "Wasm threads count")
+
+    set(_AX_WASM_THREADS_INT 0)
+    if (AX_WASM_THREADS STREQUAL "auto") # not empty string or not 0
+        # Enable pthread support globally
+        include(ProcessorCount)
+        ProcessorCount(_AX_WASM_THREADS_INT)
+    elseif(AX_WASM_THREADS MATCHES "^([0-9]+)$" OR AX_WASM_THREADS STREQUAL "navigator.hardwareConcurrency")
+        set(_AX_WASM_THREADS_INT ${AX_WASM_THREADS})
     endif()
-    set(CMAKE_C_FLAGS  ${AX_COMPILE_FLAGS})
-    set(CMAKE_CXX_FLAGS  ${AX_COMPILE_FLAGS})
+
+    message(STATUS "AX_WASM_THREADS=${AX_WASM_THREADS}")
+    message(STATUS "_AX_WASM_THREADS_INT=${_AX_WASM_THREADS_INT}")
+
+    if (_AX_WASM_THREADS_INT)
+        add_compile_options(-pthread)
+        add_link_options(-pthread -sPTHREAD_POOL_SIZE=${_AX_WASM_THREADS_INT})
+    endif()
+
+    # Tell emcc build port libs in cache with compiler flag `-pthread` xxx.c.o
+    # must via CMAKE_C_FLAGS and CMAKE_CXX_FLAGS?
+    set(_AX_EMCC_FLAGS "-sUSE_LIBJPEG=1 -sUSE_ZLIB=1")
+
+    set(CMAKE_C_FLAGS  ${_AX_EMCC_FLAGS})
+    set(CMAKE_CXX_FLAGS  ${_AX_EMCC_FLAGS})
 endif()
 
 # Try enable asm & nasm compiler support
