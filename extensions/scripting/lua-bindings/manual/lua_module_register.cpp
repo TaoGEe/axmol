@@ -36,6 +36,7 @@
 #include "scripting/lua-bindings/manual/audioengine/axlua_audioengine_manual.h"
 #include "scripting/lua-bindings/manual/physics3d/axlua_physics3d_manual.h"
 #include "scripting/lua-bindings/manual/navmesh/axlua_navmesh_manual.h"
+#include "scripting/lua-bindings/manual/fairygui/lua_fairygui.hpp"
 #include "lua_cjson.h"
 #include "yasio/bindings/yasio_axlua.hpp"
 
@@ -64,6 +65,7 @@ int lua_module_register(lua_State* L)
     register_extension_module(L);
     // TODO arnold
     register_spine_module(L);
+    register_fairygui_manual(L);
     register_cocos3d_module(L);
     register_audioengine_module(L);
 #if AX_USE_3D_PHYSICS && AX_ENABLE_BULLET_INTEGRATION

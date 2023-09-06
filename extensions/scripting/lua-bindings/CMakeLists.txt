@@ -28,6 +28,7 @@ set(lua_bindings_manual_headers
     manual/cocostudio/CustomGUIReader.h
     manual/ui/axlua_ui_manual.hpp
     manual/controller/axlua_controller_manual.hpp
+    manual/fairygui/lua_fairygui.hpp
     )
 
 set(lua_bindings_manual_files
@@ -60,6 +61,7 @@ set(lua_bindings_manual_files
     manual/physics3d/axlua_physics3d_manual.cpp
     manual/navmesh/axlua_navmesh_conversions.cpp
     manual/navmesh/axlua_navmesh_manual.cpp
+    manual/fairygui/lua_fairygui.cpp
     )
 
 set(lua_bindings_auto_headers
@@ -199,6 +201,7 @@ target_include_directories(${_AX_LUA_LIB}
     PRIVATE manual/platform/android/jni
     PRIVATE ${ax_root}/extensions/spine/runtime/include
     PRIVATE ${ax_root}/extensions/cocostudio
+    PRIVATE ${ax_root}/extensions/fairygui
     INTERFACE ${ax_root}/extensions/scripting/lua-bindings/manual
     PRIVATE ${ax_root}/extensions/spine/runtime/include
 )
