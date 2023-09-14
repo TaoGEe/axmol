@@ -412,7 +412,7 @@ namespace ax {
       _system_control->setFontSize(_fontSize * ax::Director::getInstance()->getOpenGLView()->getScaleY() /** scale.y*/);
 
       // fontFamily
-      auto font = ax::FontFreeType::create(pFontName, fontSize, ax::GlyphCollection::DYNAMIC, nullptr);
+      auto font = ax::FontFreeType::create(pFontName, fontSize, ax::GlyphCollection::DYNAMIC, "");
       if (font != nullptr) {
         std::string fontName = "ms-appx:///Assets/Resources/" + std::string(pFontName) +'#' + font->getFontFamily();
         _system_control->setFontFamily(PlatformStringFromString(fontName));
