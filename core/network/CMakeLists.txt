@@ -7,6 +7,7 @@ if(EMSCRIPTEN)
         network/HttpClient.h
         network/HttpResponse.h
         network/HttpRequest.h
+        network/AsyncTCP.h
     )
 
     set(_AX_NETWORK_SRC
@@ -15,6 +16,7 @@ if(EMSCRIPTEN)
         network/Downloader-wasm.cpp
         network/HttpCookie.cpp
         network/Uri.cpp
+        network/AsyncTCP.cpp
     )
 else()
     set(_AX_NETWORK_HEADER
@@ -26,6 +28,7 @@ else()
         network/HttpResponse.h
         network/HttpRequest.h
         network/HttpCookie.h
+        network/AsyncTCP.h
     )
 
     set(_AX_NETWORK_SRC
@@ -34,5 +37,6 @@ else()
         network/Downloader-curl.cpp
         network/HttpCookie.cpp
         network/Uri.cpp
+        network/AsyncTCP.cpp
     )
 endif()

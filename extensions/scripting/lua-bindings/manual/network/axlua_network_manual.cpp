@@ -26,12 +26,14 @@
 #include "scripting/lua-bindings/manual/network/lua_xml_http_request.h"
 #include "scripting/lua-bindings/manual/network/lua_downloader.h"
 #include "scripting/lua-bindings/manual/LuaEngine.h"
+#include "scripting/lua-bindings/manual/network/Lua_AsyncTCP.h"
 
 int register_network_module(lua_State* L)
 {
     lua_getglobal(L, "_G");
     if (lua_istable(L, -1))  // stack:...,_G,
     {
+        register_AsyncTCP_manual(L);
         register_xml_http_request(L);
         register_downloader(L);
     }
