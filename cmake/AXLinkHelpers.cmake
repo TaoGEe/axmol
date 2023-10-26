@@ -65,6 +65,8 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
         PRIVATE ${AX_ROOT_DIR}/thirdparty/lua/plainlua
         PRIVATE ${AX_ROOT_DIR}/thirdparty/lua/tolua/.
         PRIVATE ${AX_ROOT_DIR}/thirdparty/lua/lua-cjson/.
+        PRIVATE ${AX_ROOT_DIR}/thirdparty/lua/lua-sproto/.
+        PRIVATE ${AX_ROOT_DIR}/thirdparty/lua/lua-lpeg/.
         PRIVATE ${AX_ROOT_DIR}/extensions/cocostudio
         PRIVATE ${AX_ROOT_DIR}/extensions/spine/runtime/include
         PRIVATE ${AX_ROOT_DIR}/extensions/fairygui
@@ -216,7 +218,7 @@ function(ax_link_lua_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
 	        PRIVATE _USRLUASTATIC=1
         )
     endif()
-    target_link_libraries(${APP_NAME} axlua lua-cjson tolua plainlua)
+    target_link_libraries(${APP_NAME} axlua lua-cjson lua-sproto lua-lpeg tolua plainlua)
 
     ax_link_cxx_prebuilt(${APP_NAME} ${AX_ROOT_DIR} ${AX_PREBUILT_DIR})
 
