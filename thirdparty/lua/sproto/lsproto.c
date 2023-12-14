@@ -296,7 +296,7 @@ encode_one(const struct sproto_arg *args, struct encode_ud *self) {
 		} else {
 			v = tointegerx(L, -1, &isnum);
 			if(!isnum) {
-				return luaL_error(L, ".%s[%d] is not an integer (Is a %s)", 
+				return luaL_error(L, ".%s[%d] is not an integer (Is a %s)",
 					args->tagname, args->index, lua_typename(L, lua_type(L, -1)));
 			}
 		}
@@ -334,7 +334,7 @@ encode_one(const struct sproto_arg *args, struct encode_ud *self) {
 		int type = lua_type(L, -1); // get the type firstly, lua_tolstring may convert value on stack to string
 		const char * str = tolstringx(L, -1, &sz, &isstring);
 		if (!isstring) {
-			return luaL_error(L, ".%s[%d] is not a string (Is a %s)", 
+			return luaL_error(L, ".%s[%d] is not a string (Is a %s)",
 				args->tagname, args->index, lua_typename(L, type));
 		}
 		if (sz > args->length)
@@ -359,7 +359,7 @@ encode_one(const struct sproto_arg *args, struct encode_ud *self) {
 		sub.iter_key = 0;
 		r = sproto_encode(args->subtype, args->value, args->length, encode, &sub);
 		lua_settop(L, top-1);	// pop the value
-		if (r < 0) 
+		if (r < 0)
 			return SPROTO_CB_ERROR;
 		return r;
 	}
