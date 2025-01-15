@@ -295,7 +295,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
                                        ViewGroup.LayoutParams.WRAP_CONTENT);
         AxmolEditBox edittext = new AxmolEditBox(this);
         edittext.setLayoutParams(edittext_layout_params);
-
+        edittext.setVisibility(View.INVISIBLE);
 
         mFrameLayout.addView(edittext);
 
@@ -336,6 +336,15 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
         if (showVirtualButton) {
             return;
         }
+
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            lp.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+        getWindow().setAttributes(lp);
 
         if (Build.VERSION.SDK_INT >= 19) {
             // use reflection to remove dependence of API level
