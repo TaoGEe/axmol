@@ -81,7 +81,7 @@ void BufferGL::reloadBuffer()
 {
     glGenBuffers(1, &_buffer);
 
-    if (!_needDefaultStoredData)
+    if (!_needDefaultStoredData || !_data)
         return;
 
     _bufferAlreadyFilled = true;
