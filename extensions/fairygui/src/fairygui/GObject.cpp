@@ -251,7 +251,7 @@ void GObject::center(bool restraint /*= false*/)
 
 void GObject::makeFullScreen()
 {
-    setSize(UIRoot->getWidth(), UIRoot->getHeight());
+    setSize(UIRoot->getWidth(), UIRoot->getHeight(), true);
 }
 
 void GObject::setPivot(float xv, float yv, bool asAnchor)

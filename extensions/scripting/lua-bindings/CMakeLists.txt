@@ -30,6 +30,7 @@ set(lua_bindings_manual_headers
     manual/controller/axlua_controller_manual.hpp
     manual/fairygui/axlua_fairygui_manual.hpp
     manual/fairygui/axlua_fairygui_conversions.h
+    manual/network/Lua_AsyncTCP.h
     )
 
 set(lua_bindings_manual_files
@@ -65,6 +66,7 @@ set(lua_bindings_manual_files
     manual/navmesh/axlua_navmesh_manual.cpp
     manual/fairygui/axlua_fairygui_manual.cpp
     manual/fairygui/axlua_fairygui_conversions.cpp
+    manual/network/Lua_AsyncTCP.cpp
     )
 
 set(lua_bindings_auto_headers

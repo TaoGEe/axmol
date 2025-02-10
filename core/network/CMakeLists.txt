@@ -8,12 +8,17 @@ if(EMSCRIPTEN)
         network/IDownloaderImpl.h
         network/Downloader.h
         network/Uri.h
+        network/HttpClient.h
+        network/HttpResponse.h
+        network/HttpRequest.h
+        network/AsyncTCP.h
     )
 
     set(_AX_NETWORK_SRC
         network/Downloader.cpp
         network/Downloader-wasm.cpp
         network/Uri.cpp
+        network/AsyncTCP.cpp
     )
 
     if (AX_ENABLE_HTTP)
@@ -46,12 +51,18 @@ else()
         network/IDownloaderImpl.h
         network/Downloader.h
         network/Uri.h
+        network/HttpClient.h
+        network/HttpResponse.h
+        network/HttpRequest.h
+        network/HttpCookie.h
+        network/AsyncTCP.h
     )
 
     set(_AX_NETWORK_SRC
         network/Downloader.cpp
         network/Downloader-curl.cpp
         network/Uri.cpp
+        network/AsyncTCP.cpp
     )
 
     if (AX_ENABLE_HTTP)

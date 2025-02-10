@@ -27,6 +27,7 @@
 #include "lua-bindings/manual/network/lua_websocket.h"
 #include "lua-bindings/manual/network/lua_downloader.h"
 #include "lua-bindings/manual/LuaEngine.h"
+#include "lua-bindings/manual/network/Lua_AsyncTCP.h"
 
 int register_network_module(lua_State* L)
 {
@@ -36,6 +37,7 @@ int register_network_module(lua_State* L)
         tolua_web_socket_open(L);
         register_web_socket_manual(L);
         
+        register_AsyncTCP_manual(L);
         register_xml_http_request(L);
         register_downloader(L);
     }
