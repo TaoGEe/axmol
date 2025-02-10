@@ -40,9 +40,11 @@ extern "C" {
 #include "scripting/lua-bindings/manual/crypt/lua-crypt.h"
 #include "lsproto.h"
 #include "lptree.h"
+#include "luasocket/luasocket.h"
 }
 #include "lua_cjson.h"
 #include "yasio/bindings/yasio_axlua.hpp"
+
 
 static void lua_register_extensions(lua_State* L)
 {
@@ -52,6 +54,7 @@ static void lua_register_extensions(lua_State* L)
                                   {"crypt", luaopen_crypt},
                                   {"sproto.core", luaopen_sproto_core},
                                   {"lpeg", luaopen_lpeg},
+                                  {"socket.core", luaopen_socket_core},
                                   {NULL, NULL}};
 
     lua_getglobal(L, "package");
