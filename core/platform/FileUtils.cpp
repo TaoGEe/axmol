@@ -67,6 +67,9 @@ inline stdfs::path toFspath(const std::string_view& pathSV)
 
 namespace ax
 {
+#define BUFFER_SIZE 8192
+#define MAX_FILENAME 512
+
 
 // Implement DictMaker
 
@@ -340,6 +343,295 @@ public:
     }
 };
 
+class FileUtilsZipFileInfo
+{
+public:
+    std::string zipFileName{};
+};
+// unzip overrides to support FileStream
+long FileUtils_tell_file_func(voidpf opaque, voidpf stream)
+{
+    if (stream == nullptr)
+        return -1;
+
+    auto* fs = (FileStream*)stream;
+
+    return fs->tell();
+}
+
+long FileUtils_seek_file_func(voidpf opaque, voidpf stream, uint32_t offset, int origin)
+{
+    if (stream == nullptr)
+        return -1;
+
+    auto* fs = (FileStream*)stream;
+
+    return fs->seek(offset, origin) != -1 ? 0 : -1;  // must return 0 for success or -1 for error
+}
+
+voidpf FileUtils_open_file_func(voidpf opaque, const char* filename, int mode)
+{
+    FileStream::Mode fsMode;
+    if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER) == ZLIB_FILEFUNC_MODE_READ)
+        fsMode = FileStream::Mode::READ;
+    else if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
+        fsMode = FileStream::Mode::APPEND;
+    else if (mode & ZLIB_FILEFUNC_MODE_CREATE)
+        fsMode = FileStream::Mode::WRITE;
+    else
+        return nullptr;
+
+    return FileUtils::getInstance()->openFileStream(filename, fsMode).release();
+}
+
+voidpf FileUtils_opendisk_file_func(voidpf opaque, voidpf stream, uint32_t number_disk, int mode)
+{
+    if (stream == nullptr)
+        return nullptr;
+
+    const auto zipFileInfo   = static_cast<FileUtilsZipFileInfo*>(opaque);
+    std::string diskFilename = zipFileInfo->zipFileName;
+
+    const auto pos = diskFilename.rfind('.', std::string::npos);
+
+    if (pos != std::string::npos && pos != 0)
+    {
+        const size_t bufferSize = 5;
+        char extensionBuffer[bufferSize];
+        snprintf(&extensionBuffer[0], bufferSize, ".z%02u", number_disk + 1);
+        diskFilename.replace(pos, std::min((size_t)4, zipFileInfo->zipFileName.size() - pos), extensionBuffer);
+        return FileUtils_open_file_func(opaque, diskFilename.c_str(), mode);
+    }
+
+    return nullptr;
+}
+
+uint32_t FileUtils_read_file_func(voidpf opaque, voidpf stream, void* buf, uint32_t size)
+{
+    if (stream == nullptr)
+        return (uint32_t)-1;
+
+    auto* fs = (FileStream*)stream;
+    return fs->read(buf, size);
+}
+
+uint32_t FileUtils_write_file_func(voidpf opaque, voidpf stream, const void* buf, uint32_t size)
+{
+    if (stream == nullptr)
+        return (uint32_t)-1;
+
+    auto* fs = (FileStream*)stream;
+    return fs->write(buf, size);
+}
+
+int FileUtils_close_file_func(voidpf opaque, voidpf stream)
+{
+    if (stream == nullptr)
+        return -1;
+
+    auto* fs          = (FileStream*)stream;
+    const auto result = fs->close();  // 0 for success, -1 for error
+    delete fs;
+    return result;
+}
+
+// THis isn't supported by FileStream, so just check if the stream is null and open
+int FileUtils_error_file_func(voidpf opaque, voidpf stream)
+{
+    if (stream == nullptr)
+    {
+        return -1;
+    }
+
+    auto* fs = (FileStream*)stream;
+
+    if (fs->isOpen())
+    {
+        return 0;
+    }
+
+    return -1;
+}
+// End of Overrides
+
+// Implementation of AssetsManager
+
+void FileUtils::unzip(std::string_view filename, std::string_view storagePath, std::function<void(std::string)> callback) const
+{
+    auto zipFullPath = fullPathForFilename(filename);
+    auto work = [outFileName = std::string{zipFullPath}, storagePath = std::string{storagePath}]() -> std::string { 
+        zlib_filefunc_def_s zipFunctionOverrides;
+        zipFunctionOverrides.zopen_file     = FileUtils_open_file_func;
+        zipFunctionOverrides.zopendisk_file = FileUtils_opendisk_file_func;
+        zipFunctionOverrides.zread_file     = FileUtils_read_file_func;
+        zipFunctionOverrides.zwrite_file    = FileUtils_write_file_func;
+        zipFunctionOverrides.ztell_file     = FileUtils_tell_file_func;
+        zipFunctionOverrides.zseek_file     = FileUtils_seek_file_func;
+        zipFunctionOverrides.zclose_file    = FileUtils_close_file_func;
+        zipFunctionOverrides.zerror_file    = FileUtils_error_file_func;
+        zipFunctionOverrides.opaque         = nullptr;
+
+        FileUtilsZipFileInfo zipFileInfo;
+        zipFileInfo.zipFileName = outFileName;
+
+        zipFunctionOverrides.opaque = &zipFileInfo;
+
+        // Open the zip file
+        unzFile zipfile = unzOpen2(outFileName.c_str(), &zipFunctionOverrides);
+        if (!zipfile)
+        {
+            AXLOG("can not open downloaded zip file %s", outFileName.c_str());
+            return "-1";
+        }
+
+        // Get info about the zip file
+        unz_global_info global_info;
+        if (unzGetGlobalInfo(zipfile, &global_info) != UNZ_OK)
+        {
+            AXLOG("can not read file global info of %s", outFileName.c_str());
+            unzClose(zipfile);
+            return "-2";
+        }
+
+        // Buffer to hold data read from the zip file
+        char readBuffer[BUFFER_SIZE];
+
+        AXLOG("start uncompressing");
+
+        std::stringstream ss;
+        // Loop to extract all files.
+        uLong i;
+        for (i = 0; i < global_info.number_entry; ++i)
+        {
+            // Get info about current file.
+            unz_file_info fileInfo;
+            char fileName[MAX_FILENAME];
+            if (unzGetCurrentFileInfo(zipfile, &fileInfo, fileName, MAX_FILENAME, nullptr, 0, nullptr, 0) != UNZ_OK)
+            {
+                AXLOG("can not read file info");
+                unzClose(zipfile);
+                return "-3";
+            }
+
+            ss << fileName;
+            const std::string fullPath = storagePath + fileName;
+
+            // Check if this entry is a directory or a file.
+            const size_t filenameLength = strlen(fileName);
+            if (fileName[filenameLength - 1] == '/')
+            {
+                // Entry is a directory, so create it.
+                // If the directory exists, it will failed silently.
+                if (!FileUtils::getInstance()->createDirectory(fullPath))
+                {
+                    AXLOG("can not create directory %s", fullPath.c_str());
+                    unzClose(zipfile);
+                    return "-4";
+                }
+            }
+            else
+            {
+                // There are not directory entry in some case.
+                // So we need to test whether the file directory exists when uncompressing file entry
+                //, if does not exist then create directory
+                const std::string fileNameStr(fileName);
+
+                size_t startIndex = 0;
+
+                size_t index = fileNameStr.find('/', startIndex);
+
+                while (index != std::string::npos)
+                {
+                    const std::string dir = storagePath + fileNameStr.substr(0, index);
+
+                    auto fsOut = FileUtils::getInstance()->openFileStream(dir, FileStream::Mode::READ);
+                    if (!fsOut)
+                    {
+                        if (!FileUtils::getInstance()->createDirectory(dir))
+                        {
+                            AXLOG("can not create directory %s", dir.c_str());
+                            unzClose(zipfile);
+                            return "-5";
+                        }
+                        else
+                        {
+                            AXLOG("create directory %s", dir.c_str());
+                        }
+                    }
+                    else
+                    {
+                        fsOut.reset();
+                    }
+
+                    startIndex = index + 1;
+
+                    index = fileNameStr.find('/', startIndex);
+                }
+
+                // Entry is a file, so extract it.
+
+                // Open current file.
+                if (unzOpenCurrentFile(zipfile) != UNZ_OK)
+                {
+                    AXLOG("can not open file %s", fileName);
+                    unzClose(zipfile);
+                    return "-6";
+                }
+
+                // Create a file to store current file.
+                auto fsOut = FileUtils::getInstance()->openFileStream(fullPath, FileStream::Mode::WRITE);
+                if (!fsOut)
+                {
+                    AXLOG("can not open destination file %s", fullPath.c_str());
+                    unzCloseCurrentFile(zipfile);
+                    unzClose(zipfile);
+                    return "-7";
+                }
+
+                // Write current file content to destinate file.
+                int error = UNZ_OK;
+                do
+                {
+                    error = unzReadCurrentFile(zipfile, readBuffer, BUFFER_SIZE);
+                    if (error < 0)
+                    {
+                        AXLOG("can not read zip file %s, error code is %d", fileName, error);
+                        unzCloseCurrentFile(zipfile);
+                        unzClose(zipfile);
+                        fsOut.reset();
+                        return "-8";
+                    }
+
+                    if (error > 0)
+                    {
+                        fsOut->write(readBuffer, error);
+                    }
+                } while (error > 0);
+
+                fsOut.reset();
+            }
+
+            unzCloseCurrentFile(zipfile);
+
+            // Goto next entry listed in the zip file.
+            if ((i + 1) < global_info.number_entry)
+            {
+                if (unzGoToNextFile(zipfile) != UNZ_OK)
+                {
+                    AXLOG("can not read next file");
+                    unzClose(zipfile);
+                    return "-9";
+                }
+            }
+        }
+
+        AXLOG("end uncompressing");
+        unzClose(zipfile);
+        return ss.str();
+    };
+    performOperationOffthread(work,std::move(callback));
+}
+
 ValueMap FileUtils::getValueMapFromFile(std::string_view filename) const
 {
     const std::string fullPath = fullPathForFilename(filename);
@@ -533,6 +825,7 @@ bool FileUtils::writeBinaryToFile(const void* data, size_t dataSize, std::string
 
 bool FileUtils::init()
 {
+    _searchPathArray.emplace_back(getWritablePath());
     _searchPathArray.emplace_back(_defaultResRootPath);
     return true;
 }

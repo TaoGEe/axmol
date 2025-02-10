@@ -7,6 +7,9 @@
 #include "renderer/backend/RenderTarget.h"
 #include "lua-bindings/manual/tolua_fix.h"
 #include "lua-bindings/manual/LuaBasicConversions.h"
+#include "lua-bindings/manual/base/LuaScriptHandlerMgr.h"
+#include "lua-bindings/manual/LuaValue.h"
+#include "lua-bindings/manual/LuaEngine.h"
 
 int lua_ax_base_Object_retain(lua_State* tolua_S)
 {
@@ -32003,6 +32006,60 @@ int lua_ax_base_FileUtils_getStringFromFile(lua_State* tolua_S)
 
     return 0;
 }
+int lua_ax_base_FileUtils_unzip(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::FileUtils* cobj = nullptr;
+    bool ok  = true;
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"ax.FileUtils",0,&tolua_err)) goto tolua_lerror;
+#endif
+    cobj = (ax::FileUtils*)tolua_tousertype(tolua_S,1,0);
+#if _AX_DEBUG >= 1
+    if (!cobj)
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_base_FileUtils_unzip'", nullptr);
+        return 0;
+    }
+#endif
+    argc = lua_gettop(tolua_S)-1;
+    do{
+        if (argc == 3) {
+            std::string_view arg0, arg1;
+            ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FileUtils:unzip");
+            if (!ok) { break; }
+            ok &= luaval_to_std_string_view(tolua_S, 3,&arg1, "ax.FileUtils:unzip");
+            if (!ok) { break; }
+            LUA_FUNCTION handler = toluafix_ref_function(tolua_S, 4, 0);
+            auto stack = LuaEngine::getInstance()->getLuaStack();
+            auto Ls    = stack->getLuaState();
+            ScriptHandlerMgr::getInstance()->addObjectHandler((void*)cobj, handler,
+                                                              ScriptHandlerMgr::HandlerType::CALLFUNC);
+            if (!ok) { break; }
+            cobj->unzip(arg0, arg1, [=](std::string ret){
+                AXLOG("unzip:%s",ret.c_str());
+                tolua_pushstring(Ls, ret.c_str());
+                stack->executeFunctionByHandler(handler, 1);
+            });
+            lua_settop(tolua_S, 1);
+            return 1;
+        }
+    }while(0);
+
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n",  "ax.FileUtils:unzip",argc, 1);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_base_FileUtils_unzip'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_ax_base_FileUtils_fullPathForFilename(lua_State* tolua_S)
 {
     int argc = 0;
@@ -34034,6 +34091,7 @@ int lua_register_ax_base_FileUtils(lua_State* tolua_S)
         tolua_function(tolua_S,"getPathBaseNameNoExtension", lua_ax_base_FileUtils_getPathBaseNameNoExtension);
         tolua_function(tolua_S,"getPathDirName", lua_ax_base_FileUtils_getPathDirName);
         tolua_function(tolua_S,"isAbsolutePathInternal", lua_ax_base_FileUtils_isAbsolutePathInternal);
+        tolua_function(tolua_S,"unzip", lua_ax_base_FileUtils_unzip);
     tolua_endmodule(tolua_S);
     auto typeName = typeid(ax::FileUtils).name(); // rtti is literal storage
     g_luaType[reinterpret_cast<uintptr_t>(typeName)] = "ax.FileUtils";

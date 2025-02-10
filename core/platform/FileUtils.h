@@ -127,6 +127,8 @@ public:
      */
     static void setDelegate(FileUtils* delegate);
 
+    virtual void unzip(std::string_view filename, std::string_view storagePath, std::function<void(std::string)> callback) const;
+
     /**
      *  The destructor of FileUtils.
      * @js NA
