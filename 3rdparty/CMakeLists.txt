@@ -345,8 +345,10 @@ if(AX_ENABLE_EXT_LUA)
     add_subdirectory(lua/${AX_LUA_ENGINE})
     add_subdirectory(lua/tolua)
     add_subdirectory(lua/lua-cjson)
+    add_subdirectory(lua/sproto)
+    add_subdirectory(lua/lpeg)
     set_property(TARGET 3rdparty APPEND PROPERTY
-        AX_LUA_DEPEND ${AX_LUA_ENGINE} tolua lua-cjson
+        AX_LUA_DEPEND ${AX_LUA_ENGINE} tolua lua-cjson lua-sproto lua-lpeg
     )
     if (AX_USE_LUAJIT)
         target_compile_definitions(lua-cjson PRIVATE USING_LUAJIT=1)
