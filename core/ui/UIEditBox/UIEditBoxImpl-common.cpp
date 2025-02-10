@@ -315,7 +315,7 @@ void EditBoxImplCommon::setVisible(bool visible)
 void EditBoxImplCommon::setContentSize(const Vec2& size)
 {
     _contentSize = applyPadding(size);
-    AXLOGD("[Edit text] content size = ({}, {})", _contentSize.width, _contentSize.height);
+    // AXLOGD("[Edit text] content size = ({}, {})", _contentSize.width, _contentSize.height);
     placeInactiveLabels(_contentSize);
 }
 

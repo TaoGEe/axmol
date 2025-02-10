@@ -513,7 +513,7 @@ void FileUtils::unzip(std::string_view filename, std::string_view storagePath, s
                 return "-3";
             }
 
-            ss << fileName;
+            ss << fileName << "\n";
             const std::string fullPath = storagePath + fileName;
 
             // Check if this entry is a directory or a file.
@@ -555,7 +555,7 @@ void FileUtils::unzip(std::string_view filename, std::string_view storagePath, s
                         }
                         else
                         {
-                            AXLOG("create directory %s", dir.c_str());
+                            //AXLOG("create directory %s", dir.c_str());
                         }
                     }
                     else

@@ -32041,7 +32041,6 @@ int lua_ax_base_FileUtils_unzip(lua_State* tolua_S)
                                                               ScriptHandlerMgr::HandlerType::CALLFUNC);
             if (!ok) { break; }
             cobj->unzip(arg0, arg1, [=](std::string ret){
-                AXLOG("unzip:%s",ret.c_str());
                 tolua_pushstring(Ls, ret.c_str());
                 stack->executeFunctionByHandler(handler, 1);
             });
