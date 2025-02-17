@@ -137,7 +137,7 @@ class AxmolUtils {
 
         // ndkVer,ndkPath,cmakeVer,cmakeOptions(AX_USE_XXX, AX_ENABLE_XXX, AX_ENABLE_EXT_XXX),cmakeDir<nullable>
         // def rets = new ArrayList(5) //
-        findNDK(sdkRoot, ndkVer, buildProfiles)
+//        findNDK(sdkRoot, ndkVer, buildProfiles)
         findCMake(sdkRoot, cmakeVer, buildProfiles)
         parseCMakeOptions(project, buildProfiles)
         def cmakeDir = buildProfiles['cmakeDir']

@@ -16,13 +16,13 @@
 #include <string>
 
 #include "network/AsyncTCP.h"
-#include "scripting/lua-bindings/manual/tolua_fix.h"
+#include "lua-bindings/manual/tolua_fix.h"
 
-#include "scripting/lua-bindings/manual/LuaStack.h"
-#include "scripting/lua-bindings/manual/LuaValue.h"
-#include "scripting/lua-bindings/manual/LuaEngine.h"
-#include "scripting/lua-bindings/manual/LuaBasicConversions.h"
-#include "scripting/lua-bindings/manual/base/LuaScriptHandlerMgr.h"
+#include "lua-bindings/manual/LuaStack.h"
+#include "lua-bindings/manual/LuaValue.h"
+#include "lua-bindings/manual/LuaEngine.h"
+#include "lua-bindings/manual/LuaBasicConversions.h"
+#include "lua-bindings/manual/base/LuaScriptHandlerMgr.h"
 
 using namespace ax;
 
@@ -39,7 +39,7 @@ static int lua_AsyncTCP_create(lua_State* tolua_S)
         tolua_register_gc(tolua_S, lua_gettop(tolua_S));
         return 1;
     } while (0);
-    
+
 #if AX_DEBUG >= 1
 tolua_lerror:
     tolua_error(tolua_S,"#ferror in function 'lua_AsyncTCP_create'.",&tolua_err);
@@ -70,7 +70,7 @@ static int lua_AsyncTCP_setEventCB(lua_State* tolua_S)
                 }
                 stack->executeFunctionByHandler(handler, 2);
             });
-            
+
             ScriptHandlerMgr::getInstance()->removeObjectAllHandlers((void*)self);
             ScriptHandlerMgr::getInstance()->addCustomHandler((void*)self, handler);
         }
@@ -168,7 +168,7 @@ static int lua_gc_AsyncTCP(lua_State* tolua_S)
 TOLUA_API int register_AsyncTCP_manual(lua_State* tolua_S)
 {
     AsyncTCP::initEnv(); // init library
-    
+
 	tolua_open(tolua_S);
 	tolua_usertype(tolua_S, "AsyncTCP");
 	tolua_cclass(tolua_S, "AsyncTCP", "AsyncTCP", "ax.Ref", lua_gc_AsyncTCP);

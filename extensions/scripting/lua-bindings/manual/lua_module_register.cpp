@@ -37,7 +37,7 @@
 #include "lua-bindings/manual/navmesh/axlua_navmesh_manual.h"
 #include "lua-bindings/manual/fairygui/axlua_fairygui_manual.hpp"
 extern "C" {
-#include "scripting/lua-bindings/manual/crypt/lua-crypt.h"
+#include "lua-bindings/manual/crypt/lua-crypt.h"
 #include "lsproto.h"
 #include "lptree.h"
 #include "luasocket/luasocket.h"

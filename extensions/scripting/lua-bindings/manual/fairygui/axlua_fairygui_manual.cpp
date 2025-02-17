@@ -736,14 +736,14 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
 #endif
     cobj = (fairygui::GMovieClip*)tolua_tousertype(tolua_S,1,0);
 #if _AX_DEBUG >= 1
-    if (!cobj) 
+    if (!cobj)
     {
         tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_fairygui_GMovieClip_setPlaySettings'", nullptr);
         return 0;
     }
 #endif
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 0) 
+    if (argc == 0)
     {
         if(!ok)
         {
@@ -754,7 +754,7 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
-    if (argc == 1) 
+    if (argc == 1)
     {
         int arg0;
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GMovieClip:setPlaySettings");
@@ -767,7 +767,7 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
-    if (argc == 2) 
+    if (argc == 2)
     {
         int arg0;
         int arg1;
@@ -782,7 +782,7 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
-    if (argc == 3) 
+    if (argc == 3)
     {
         int arg0;
         int arg1;
@@ -799,7 +799,7 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
-    if (argc == 4) 
+    if (argc == 4)
     {
         int arg0;
         int arg1;
@@ -818,7 +818,7 @@ int lua_ax_fairygui_GMovieClip_setPlaySettings(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
-    if (argc == 5) 
+    if (argc == 5)
     {
 #if _AX_DEBUG >= 1
         if (!toluafix_isfunction(tolua_S, 6, "LUA_FUNCTION", 0, &tolua_err))
@@ -880,14 +880,14 @@ int lua_ax_fairygui_GTweener_onUpdate(lua_State* tolua_S)
 #endif
     cobj = (fairygui::GTweener*)tolua_tousertype(tolua_S,1,0);
 #if _AX_DEBUG >= 1
-    if (!cobj) 
+    if (!cobj)
     {
         tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_fairygui_GTweener_onUpdate'", nullptr);
         return 0;
     }
 #endif
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
+    if (argc == 1)
     {
 #if _AX_DEBUG >= 1
         if (!toluafix_isfunction(tolua_S, 2, "LUA_FUNCTION", 0, &tolua_err))
@@ -930,14 +930,14 @@ int lua_ax_fairygui_GTweener_onStart(lua_State* tolua_S)
 #endif
     cobj = (fairygui::GTweener*)tolua_tousertype(tolua_S,1,0);
 #if _AX_DEBUG >= 1
-    if (!cobj) 
+    if (!cobj)
     {
         tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_fairygui_GTweener_onStart'", nullptr);
         return 0;
     }
 #endif
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
+    if (argc == 1)
     {
 #if _AX_DEBUG >= 1
         if (!toluafix_isfunction(tolua_S, 2, "LUA_FUNCTION", 0, &tolua_err))
@@ -980,14 +980,14 @@ int lua_ax_fairygui_GTweener_onComplete(lua_State* tolua_S)
 #endif
     cobj = (fairygui::GTweener*)tolua_tousertype(tolua_S,1,0);
 #if _AX_DEBUG >= 1
-    if (!cobj) 
+    if (!cobj)
     {
         tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_fairygui_GTweener_onComplete'", nullptr);
         return 0;
     }
 #endif
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
+    if (argc == 1)
     {
 #if _AX_DEBUG >= 1
         if (!toluafix_isfunction(tolua_S, 2, "LUA_FUNCTION", 0, &tolua_err))
@@ -1027,14 +1027,14 @@ int lua_ax_fairygui_GTweener_onComplete1(lua_State* tolua_S)
 #endif
     cobj = (fairygui::GTweener*)tolua_tousertype(tolua_S,1,0);
 #if _AX_DEBUG >= 1
-    if (!cobj) 
+    if (!cobj)
     {
         tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_fairygui_GTweener_onComplete1'", nullptr);
         return 0;
     }
 #endif
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
+    if (argc == 1)
     {
 #if _AX_DEBUG >= 1
         if (!toluafix_isfunction(tolua_S, 2, "LUA_FUNCTION", 0, &tolua_err))
@@ -1062,6 +1062,621 @@ int lua_ax_fairygui_GTweener_onComplete1(lua_State* tolua_S)
     tolua_error(tolua_S,"#ferror in function 'lua_ax_fairygui_GTweener_onComplete1'.",&tolua_err);
 #endif
     return 0;
+}
+
+typedef enum
+{
+    UICONFIG_MUSIC
+} UIConfig_HandlerType;
+
+static int lua_fairygui_UIConfig_registerFont(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(tolua_S, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+    if (argc == 2)
+    {
+        std::string arg0;
+        std::string arg1;
+        ok &= luaval_to_std_string(tolua_S, 2, &arg0, "fairygui.UIConfig:registerFont");
+        ok &= luaval_to_std_string(tolua_S, 3, &arg1, "fairygui.UIConfig:registerFont");
+        if (!ok)
+        {
+            tolua_error(tolua_S, "invalid arguments in function 'lua_fairygui_UIConfig_registerFont'", nullptr);
+            return 0;
+        }
+        fairygui::UIConfig::registerFont(arg0, arg1);
+        return 0;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "fairygui.UIConfig:registerFont",
+               argc, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(tolua_S, "#ferror in function 'lua_fairygui_UIConfig_registerFont'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultFont(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultFont = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultFont'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_buttonSound(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::buttonSound = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_buttonSound'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_buttonSoundVolumeScale(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::buttonSoundVolumeScale = lua_tonumber(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_buttonSoundVolumeScale'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultScrollStep(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultScrollStep = lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultScrollStep'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultScrollDecelerationRate(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultScrollDecelerationRate = lua_tonumber(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultScrollDecelerationRate'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultScrollTouchEffect(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isboolean(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultScrollTouchEffect = lua_toboolean(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultScrollTouchEffect'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultScrollBounceEffect(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isboolean(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultScrollBounceEffect = lua_toboolean(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultScrollBounceEffect'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultScrollBarDisplay(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultScrollBarDisplay = (fairygui::ScrollBarDisplayType)lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultScrollBarDisplay'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_verticalScrollBar(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::verticalScrollBar = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_verticalScrollBar'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_horizontalScrollBar(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::horizontalScrollBar = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_horizontalScrollBar'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_touchDragSensitivity(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::touchDragSensitivity = lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_touchDragSensitivity'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_clickDragSensitivity(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::clickDragSensitivity = lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_clickDragSensitivity'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_touchScrollSensitivity(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::touchScrollSensitivity = lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_touchScrollSensitivity'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_defaultComboBoxVisibleItemCount(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isnumber(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::defaultComboBoxVisibleItemCount = lua_tointeger(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultComboBoxVisibleItemCount'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_globalModalWaiting(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::globalModalWaiting = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_globalModalWaiting'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_modalLayerColor(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_istable(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    {
+        Color4F colorf;
+        luaval_to_color4f(L, 2, &colorf);
+        fairygui::UIConfig::modalLayerColor = colorf;
+    }
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_modalLayerColor'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_tooltipsWin(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::tooltipsWin = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_tooltipsWin'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_bringWindowToFrontOnClick(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isboolean(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::bringWindowToFrontOnClick = lua_toboolean(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_bringWindowToFrontOnClick'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_windowModalWaiting(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::windowModalWaiting = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_windowModalWaiting'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_popupMenu(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::popupMenu = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_popupMenu'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_popupMenu_seperator(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isstring(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    fairygui::UIConfig::popupMenu_seperator = lua_tostring(L, 2);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_popupMenu_seperator'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_fairygui_UIConfig_set_onMusicCallback(lua_State* L)
+{
+    LUA_FUNCTION refid = -1;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+    /*
+    if lua_isnil (L, 2)
+    {
+        fairygui::UIConfig::onMusicCallback = nullptr;
+        // cheat, use fairygui::UIConfig::registerFont address for ref object *_*
+        ScriptHandlerMgr::getInstance()->removeObjectHandler((void*)fairygui::UIConfig::registerFont,
+                                                             (ScriptHandlerMgr::HandlerType)UICONFIG_MUSIC);
+        return 0;
+    }
+#if COCOS2D_DEBUG >= 1
+    if (!toluafix_isfunction(L, 2, "LUA_FUNCTION", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    refid                               = (toluafix_ref_function(L, 2, 0));
+    fairygui::UIConfig::onMusicCallback = [=](const std::string& path) {
+        LuaEngine::getInstance()->getLuaStack()->pushFunctionByHandler(refid);
+        lua_pushlstring(L, path.c_str(), path.length());
+        int error = lua_pcall(L, 1, 0, 0);  // 1 pararm, 0 return
+        if (error)
+        {
+            CCLOG("[LUA ERROR] %s", lua_tostring(L, -1));
+            lua_pop(L, 1);  // remove error message from stack
+        }
+    };
+    ScriptHandlerMgr::getInstance()->addObjectHandler((void*)fairygui::UIConfig::registerFont, refid,
+                                                      (ScriptHandlerMgr::HandlerType)UICONFIG_MUSIC);*/
+    return 0;
+
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_onMusicCallback'.", &tolua_err);
+    return 0;
+#endif
+}
+
+static int lua_register_fairygui_UIConfig(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S, "fgui.UIConfig");
+    tolua_cclass(tolua_S,"UIConfig","fgui.UIConfig","ax.Object",nullptr);
+
+    tolua_beginmodule(tolua_S, "UIConfig");
+    // variable
+    tolua_variable(tolua_S, "defaultFont", nullptr, lua_fairygui_UIConfig_set_defaultFont);
+    tolua_variable(tolua_S, "buttonSound", nullptr, lua_fairygui_UIConfig_set_buttonSound);
+    tolua_variable(tolua_S, "buttonSoundVolumeScale", nullptr, lua_fairygui_UIConfig_set_buttonSoundVolumeScale);
+    tolua_variable(tolua_S, "defaultScrollStep", nullptr, lua_fairygui_UIConfig_set_defaultScrollStep);
+    tolua_variable(tolua_S, "defaultScrollDecelerationRate", nullptr,
+                   lua_fairygui_UIConfig_set_defaultScrollDecelerationRate);
+    tolua_variable(tolua_S, "defaultScrollTouchEffect", nullptr, lua_fairygui_UIConfig_set_defaultScrollTouchEffect);
+    tolua_variable(tolua_S, "defaultScrollBounceEffect", nullptr, lua_fairygui_UIConfig_set_defaultScrollBounceEffect);
+    tolua_variable(tolua_S, "defaultScrollBarDisplay", nullptr, lua_fairygui_UIConfig_set_defaultScrollBarDisplay);
+    tolua_variable(tolua_S, "verticalScrollBar", nullptr, lua_fairygui_UIConfig_set_verticalScrollBar);
+    tolua_variable(tolua_S, "horizontalScrollBar", nullptr, lua_fairygui_UIConfig_set_horizontalScrollBar);
+    tolua_variable(tolua_S, "touchDragSensitivity", nullptr, lua_fairygui_UIConfig_set_touchDragSensitivity);
+    tolua_variable(tolua_S, "clickDragSensitivity", nullptr, lua_fairygui_UIConfig_set_clickDragSensitivity);
+    tolua_variable(tolua_S, "touchScrollSensitivity", nullptr, lua_fairygui_UIConfig_set_touchScrollSensitivity);
+    tolua_variable(tolua_S, "defaultComboBoxVisibleItemCount", nullptr,
+                   lua_fairygui_UIConfig_set_defaultComboBoxVisibleItemCount);
+    tolua_variable(tolua_S, "globalModalWaiting", nullptr, lua_fairygui_UIConfig_set_globalModalWaiting);
+    tolua_variable(tolua_S, "modalLayerColor", nullptr, lua_fairygui_UIConfig_set_modalLayerColor);
+    tolua_variable(tolua_S, "tooltipsWin", nullptr, lua_fairygui_UIConfig_set_tooltipsWin);
+    tolua_variable(tolua_S, "bringWindowToFrontOnClick", nullptr, lua_fairygui_UIConfig_set_bringWindowToFrontOnClick);
+    tolua_variable(tolua_S, "windowModalWaiting", nullptr, lua_fairygui_UIConfig_set_windowModalWaiting);
+    tolua_variable(tolua_S, "popupMenu", nullptr, lua_fairygui_UIConfig_set_popupMenu);
+    tolua_variable(tolua_S, "popupMenu_seperator", nullptr, lua_fairygui_UIConfig_set_popupMenu_seperator);
+    tolua_variable(tolua_S, "onMusicCallback", nullptr, lua_fairygui_UIConfig_set_onMusicCallback);
+    // function
+    tolua_function(tolua_S, "registerFont", lua_fairygui_UIConfig_registerFont);
+    tolua_endmodule(tolua_S);
+    auto typeName                                    = typeid(fairygui::UIConfig).name();  // rtti is literal storage
+    g_luaType[reinterpret_cast<uintptr_t>(typeName)] = "fgui.UIConfig";
+    g_typeCast[typeName]                             = "fgui.UIConfig";
+    return 1;
 }
 
 static void extendGTweener(lua_State* L)
@@ -1102,6 +1717,14 @@ int register_fairygui_module(lua_State* L)
         register_all_fairygui_manual(L);
     }
     lua_pop(L, 1);
+
+    lua_getglobal(L, "fgui");
+    if (lua_istable(L, -1))  // stack:...,_G,
+    {
+        lua_register_fairygui_UIConfig(L);
+    }
+    lua_pop(L, 1);
+
     return 1;
 }
 

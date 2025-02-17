@@ -18,7 +18,8 @@
 
 /* global table */
 #define LUA_GNAME	"_G"
-
+#define LUA_COMPAT_APIINTCASTS 1
+#define LUA_COMPAT_MATHLIB 1
 
 typedef struct luaL_Buffer luaL_Buffer;
 

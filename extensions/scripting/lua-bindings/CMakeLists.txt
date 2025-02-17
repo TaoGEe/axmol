@@ -236,6 +236,10 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(${_AX_LUA_LIB} PRIVATE CCS_DLLIMPORT)
 endif()
 
+if(AX_ENABLE_EXT_FAIRYGUI)
+    target_compile_definitions(${_AX_LUA_LIB} PRIVATE AX_ENABLE_EXT_FAIRYGUI)
+endif()
+
 if(WINDOWS)
     if (WINRT)
         target_compile_options(${_AX_LUA_LIB} PUBLIC /wd4700)

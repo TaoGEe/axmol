@@ -23,21 +23,21 @@
 #include <stdio.h>
 #include <memory.h>
 
-#include "base/Ref.h"
+#include "base/RefPtr.h"
 
-class AX_DLL AsyncTCP : public ax::Ref
+class AX_DLL AsyncTCP : public ax::Object
 {
 public:
     static void initEnv();
     AsyncTCP();
     ~AsyncTCP();
-    
+
     // state: 1 connecting, 2 failed, 3 connected, 4 data, 5 closed.
     void setEventCB(std::function<void(int state, unsigned char *msg, size_t size)> cb);
     void open(const std::string host, int port, int timeout = 10);
     void send(unsigned char *buffer, size_t len);
     void close();
-    
+
 private:
     enum {
         EVENT_CONNECTING,
@@ -46,7 +46,7 @@ private:
         EVENT_CLOSED,
         EVENT_DATA
     };
-    
+
     struct TCPData {
     public:
         TCPData(int stat, unsigned char *b, size_t s)
@@ -65,24 +65,24 @@ private:
         size_t size;
         int state;
     };
-    
+
     void update(float dt);
     void waitThreadAndClean();
-    
+
     void socketThread();
     void notify(int state, unsigned char *msg, size_t size); // call on socketThread
     int openTCP(bool isIpv6); // call on socketThread
     void closeTCP(); // call on socketThread
     int recvTCP(); // call on socketThread
     int sendTCP(unsigned char *buff, size_t size); // call on socketThread
-    
+
     int _tcp;
     std::string _host;
     int _port;
     int _timeout;
     std::function<void(int state, unsigned char *msg, size_t size)> _cb;
     bool _quit;
-    
+
     std::thread *_thread;
     TCPData * _sendData; // send to server
     std::mutex _sendMutex;
