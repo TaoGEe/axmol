@@ -544,7 +544,11 @@ void GObject::transformRectPoint(const Vec2& pt, float rect[], GObject* targetSp
 
 void GObject::addRelation(GObject* target, RelationType relationType, bool usePercent)
 {
-    _relations->add(target, relationType, usePercent);
+    if (relationType == RelationType::Copy) {
+        _relations->copyFrom(*target->relations());
+    }else {
+        _relations->add(target, relationType, usePercent);
+    }
 }
 
 void GObject::removeRelation(GObject* target, RelationType relationType)

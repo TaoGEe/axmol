@@ -1730,7 +1730,7 @@ void Label::updateContent()
                 // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
                 // This is to have the same behavior of SystemFonts.
                 _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                         Color4F(_displayedColor), charheight / 6);
+                                         Color4F(_displayedColor), charheight / 20);
             }
         }
         else if (_textSprite)
@@ -1745,7 +1745,7 @@ void Label::updateContent()
                 y += spriteSize.height / 2;
             // FIXME: Might not work with different vertical alignments
             _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y),
-                                     Color4F(_textSprite->getDisplayedColor()), spriteSize.height / 6);
+                                     Color4F(_textSprite->getDisplayedColor()), spriteSize.height / 20);
         }
     }
 

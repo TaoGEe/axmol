@@ -600,6 +600,8 @@ void Scheduler::unscheduleScriptEntry(unsigned int scheduleScriptEntryID)
         {
             entry->markedForDeletion();
             break;
+        }else if (scheduleScriptEntryID == 0) {
+            entry->markedForDeletion();
         }
     }
 }

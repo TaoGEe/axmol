@@ -40,7 +40,9 @@ enum class RelationType
     BottomExt_Top,
     BottomExt_Bottom,
 
-    Size
+    Size,
+
+    Copy
 };
 
 class RelationDef
