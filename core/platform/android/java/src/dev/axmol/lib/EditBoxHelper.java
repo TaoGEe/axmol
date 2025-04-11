@@ -176,7 +176,7 @@ public class EditBoxHelper {
                                     EditBoxHelper.__editBoxEditingDidEnd(index, text, action);
                                 }
                             });
-                            mActivity.hideVirtualButton();
+                            mActivity.hideVirtualButton(false, false);
                             mFrameLayout.setEnableForceDoLayout(false);
                             Log.d(TAG, "edit box lose focus");
                         }
@@ -447,7 +447,7 @@ public class EditBoxHelper {
             mActivity.getGLSurfaceView().setSoftKeyboardShown(false);
             mActivity.getGLSurfaceView().requestFocus();
             // can take effect after GLSurfaceView has focus
-            mActivity.hideVirtualButton();
+            mActivity.hideVirtualButton(false, false);
         }
     }
 

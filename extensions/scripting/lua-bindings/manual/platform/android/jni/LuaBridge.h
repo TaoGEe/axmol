@@ -29,7 +29,10 @@
 #    include <jni.h>
 
 extern "C" {
-
+JNIEXPORT jstring JNICALL Java_dev_axmol_lib_LuaBridge_callLuaGlobalFunctionReturnString(JNIEnv* env,
+                                                                                         jclass,
+                                                                                         jstring,
+                                                                                         jstring);
 /// @cond
 /*
  * Class:     Java_dev_axmol_lib_LuaBridge

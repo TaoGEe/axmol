@@ -543,7 +543,7 @@ int LuaJavaBridge::callLuaFunctionById(int functionId, const char* arg)
 }
 
 // call lua global function
-int LuaJavaBridge::callLuaGlobalFunction(const char* functionName, const char* arg)
+int LuaJavaBridge::callLuaGlobalFunction(const char* functionName, const char* arg, string* retstr)
 {
     lua_State* L = s_luaState;
 
@@ -557,7 +557,12 @@ int LuaJavaBridge::callLuaGlobalFunction(const char* functionName, const char* a
         int ok = lua_pcall(L, 1, 1, 0);
         if (ok == 0)
         {
-            ret = lua_tonumber(L, -1);
+            if (tolua_isstring(L, -1, 0, NULL)) {
+                *retstr = lua_tostring(L, -1);
+                ret = 0;
+            }else {
+                ret = lua_tonumber(L, -1);
+            }
         }
         else
         {

@@ -135,7 +135,7 @@ public class AxmolGLSurfaceView extends GLSurfaceView {
                             AxmolGLSurfaceView.this.requestFocus();
                             // can take effect after GLSurfaceView has focus
                             AxmolGLSurfaceView.this.mEditText.setVisibility(View.GONE);
-                            ((AxmolActivity)AxmolGLSurfaceView.mGLSurfaceView.getContext()).hideVirtualButton();
+                            ((AxmolActivity)AxmolGLSurfaceView.mGLSurfaceView.getContext()).hideVirtualButton(false, false);
                             Log.d("GLSurfaceView", "HideSoftInput");
                         }
                         break;

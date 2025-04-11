@@ -121,7 +121,7 @@ public:
      * @lua NA
      * @js NA
      */
-    static int callLuaGlobalFunction(const char* functionName, const char* arg);
+    static int callLuaGlobalFunction(const char* functionName, const char* arg, string* ret = NULL);
 
 private:
     typedef enum

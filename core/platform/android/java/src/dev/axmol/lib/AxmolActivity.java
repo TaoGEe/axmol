@@ -36,6 +36,7 @@ import android.media.AudioManager;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager.OnActivityResultListener;
@@ -70,7 +71,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
     private static AxmolActivity sContext = null;
     private WebViewHelper mWebViewHelper = null;
     private EditBoxHelper mEditBoxHelper = null;
-    private boolean showVirtualButton = false;
+    private boolean fullScreen = false;
 
     public AxmolGLSurfaceView getGLSurfaceView(){
         return  mGLSurfaceView;
@@ -127,10 +128,6 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
         getWindow().getDecorView().performHapticFeedback(feedback);
     }
 
-    public void setEnableVirtualButton(boolean value) {
-        this.showVirtualButton = value;
-    }
-
     protected void onLoadNativeLibraries() {
         try {
             ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -161,8 +158,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
             return;
         }
 
-        this.hideVirtualButton();
-
+        this.hideVirtualButton(true, true);
         onLoadNativeLibraries();
 
         sContext = this;
@@ -212,7 +208,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
     	Log.i(TAG, "onResume()");
         super.onResume();
 
-        hideVirtualButton();
+        this.hideVirtualButton(true, true);
         AxmolEngine.onResume();
         mGLSurfaceView.handleOnResume();
         mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -339,19 +335,28 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
         return glSurfaceView;
     }
 
-    protected void hideVirtualButton() {
-        if (showVirtualButton) {
-            return;
+    public static void setStatusBarVisible( boolean visible, boolean white ) {
+        sContext.hideVirtualButton(!visible, white);
+    }
+
+    protected void hideVirtualButton(boolean hideStatusBar, boolean whitesb) {
+        if (fullScreen) {
+            hideStatusBar = true;
+        }
+        if (!hideStatusBar) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(android.R.color.transparent));
         }
 
-//        WindowManager.LayoutParams lp = getWindow().getAttributes();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-//            lp.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-//        }
-//        getWindow().setAttributes(lp);
+        // 全面屏全屏显示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            // Enable rendering into the cutout area
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
 
         if (Build.VERSION.SDK_INT >= 19) {
             // use reflection to remove dependence of API level
@@ -360,19 +365,32 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
 
             try {
                 final int SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION");
-                final int SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN");
                 final int SYSTEM_UI_FLAG_HIDE_NAVIGATION = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
-                final int SYSTEM_UI_FLAG_FULLSCREEN = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_FULLSCREEN");
-                final int SYSTEM_UI_FLAG_IMMERSIVE_STICKY = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_IMMERSIVE_STICKY");
                 final int SYSTEM_UI_FLAG_LAYOUT_STABLE = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_LAYOUT_STABLE");
 
-                // getWindow().getDecorView().setSystemUiVisibility();
+                int SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN = 0;
+                int SYSTEM_UI_FLAG_FULLSCREEN = 0;
+                int SYSTEM_UI_FLAG_IMMERSIVE_STICKY = 0;
+                int SYSTEM_UI_FLAG_LIGHT_STATUS_BAR = 0;
+                if (hideStatusBar) {
+                    SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN");
+                    SYSTEM_UI_FLAG_FULLSCREEN = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_FULLSCREEN");
+                    SYSTEM_UI_FLAG_IMMERSIVE_STICKY = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_IMMERSIVE_STICKY");
+                }else {
+                    if (whitesb) {
+                        SYSTEM_UI_FLAG_LIGHT_STATUS_BAR = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_VISIBLE");
+                    }else {
+                        SYSTEM_UI_FLAG_LIGHT_STATUS_BAR = ReflectionHelper.<Integer>getConstantValue(viewClass, "SYSTEM_UI_FLAG_LIGHT_STATUS_BAR");
+                    }
+                }
+
                 final Object[] parameters = new Object[]{SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | SYSTEM_UI_FLAG_IMMERSIVE_STICKY};
+                        | SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | SYSTEM_UI_FLAG_LIGHT_STATUS_BAR};
                 ReflectionHelper.<Void>invokeInstanceMethod(getWindow().getDecorView(),
                         "setSystemUiVisibility",
                         new Class[]{Integer.TYPE},

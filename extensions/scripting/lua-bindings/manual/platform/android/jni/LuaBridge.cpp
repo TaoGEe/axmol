@@ -59,6 +59,19 @@ Java_dev_axmol_lib_LuaBridge_callLuaGlobalFunctionWithString(JNIEnv* env,
     return ret;
 }
 
+JNIEXPORT jstring JNICALL
+Java_dev_axmol_lib_LuaBridge_callLuaGlobalFunctionReturnString(JNIEnv* env,
+                                                             jclass,
+                                                             jstring luaFunctionName,
+                                                             jstring value)
+{
+    std::string functionNameStr = ax::StringUtils::getStringUTFCharsJNI(env, luaFunctionName);
+    std::string valueStr        = ax::StringUtils::getStringUTFCharsJNI(env, value);
+    std::string retstr;
+    int ret = LuaJavaBridge::callLuaGlobalFunction(functionNameStr.c_str(), valueStr.c_str(), &retstr);
+    return env->NewStringUTF(retstr.c_str());
+}
+
 JNIEXPORT jint JNICALL Java_dev_axmol_lib_LuaBridge_retainLuaFunction(JNIEnv* env,
                                                                                      jclass,
                                                                                      jint luaFunctionId)

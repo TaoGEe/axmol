@@ -126,6 +126,7 @@ void GTextInput::editBoxTextChanged(ax::ui::EditBox* editBox, std::string_view /
 {
     _text.clear();
     _text.append(_input->getText());
+    dispatchEvent(UIEventType::Changed);
 }
 
 NS_FGUI_END
