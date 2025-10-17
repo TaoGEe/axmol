@@ -820,11 +820,11 @@ void EditBox::updatePosition(float dt)
 void EditBox::onExit()
 {
     Widget::onExit();
-    if (_editBoxImpl != nullptr)
-    {
-        // remove system edit control
-        _editBoxImpl->closeKeyboard();
-    }
+//    if (_editBoxImpl != nullptr)
+//    {
+//        // remove system edit control
+//        _editBoxImpl->closeKeyboard();
+//    }
 }
 
 static Rect getRect(Node* pNode)

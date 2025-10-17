@@ -9,6 +9,13 @@ NS_FGUI_BEGIN
 class UIConfig
 {
 public:
+    enum class Theme
+    {
+        DEFAULT,
+        DARK,
+        LIGHT
+    };
+public:
     static std::string defaultFont;
     static std::string buttonSound;
     static float buttonSoundVolumeScale;
@@ -30,9 +37,21 @@ public:
     static std::string windowModalWaiting;
     static std::string popupMenu;
     static std::string popupMenu_seperator;
+    static Theme defaultTheme;
 
     static void registerFont(const std::string& aliasName, const std::string& realName);
     static const std::string& getRealFontName(const std::string& aliasName, bool* isTTF = nullptr);
+
+    static void convertToThemeColor( ax::Color4B& color ) {
+        if (defaultTheme == Theme::DARK && color.r == color.g && color.r == color.b) {
+            color.r = color.g = color.b = 255 - color.r;
+        }
+    }
+    static void convertToThemeColor( ax::Color3B& color ) {
+        if (defaultTheme == Theme::DARK && color.r == color.g && color.r == color.b) {
+            color.r = color.g = color.b = 255 - color.r;
+        }
+    }
 
 private:
     struct FontNameItem

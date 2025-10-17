@@ -33619,21 +33619,22 @@ int lua_ax_base_FileUtils_listFilesRecursively(lua_State* tolua_S)
 #endif
 
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 2) 
+    if (argc == 1) 
     {
         std::string_view arg0;
-        std::vector<std::string>* arg1;
+        std::vector<std::string> ret;
+        std::vector<std::string>* arg1 = &ret;
 
         ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FileUtils:listFilesRecursively");
 
-        ok &= luaval_to_object<std::vector<std::string>>(tolua_S, 3, "std::vector<std::string>*",&arg1, "ax.FileUtils:listFilesRecursively");
+        // ok &= luaval_to_object<std::vector<std::string>>(tolua_S, 3, "std::vector<std::string>*",&arg1, "ax.FileUtils:listFilesRecursively");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_FileUtils_listFilesRecursively'", nullptr);
             return 0;
         }
         cobj->listFilesRecursively(arg0, arg1);
-        lua_settop(tolua_S, 1);
+        ccvector_std_string_to_luaval(tolua_S, ret);
         return 1;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.FileUtils:listFilesRecursively",argc, 2);

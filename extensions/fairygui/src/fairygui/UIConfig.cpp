@@ -24,6 +24,7 @@ bool UIConfig::bringWindowToFrontOnClick = true;
 std::string UIConfig::windowModalWaiting = "";
 std::string UIConfig::popupMenu = "";
 std::string UIConfig::popupMenu_seperator = "";
+UIConfig::Theme UIConfig::defaultTheme = UIConfig::Theme::DEFAULT;
 
 std::unordered_map<std::string, UIConfig::FontNameItem> UIConfig::_fontNames;
 

@@ -28,6 +28,7 @@ GComboBox::GComboBox()
 
 GComboBox::~GComboBox()
 {
+    UIRoot->hidePopup(_dropdown);
     AX_SAFE_RELEASE(_dropdown);
 }
 

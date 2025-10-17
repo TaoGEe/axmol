@@ -1478,6 +1478,33 @@ tolua_lerror:
 #endif
 }
 
+static int lua_fairygui_UIConfig_set_defaultTheme(lua_State* L)
+{
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+    if (!tolua_isusertable(L, 1, "fairygui.UIConfig", 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_istable(L, 2, 0, &tolua_err))
+        goto tolua_lerror;
+#endif
+
+    {
+        int tag;
+        luaval_to_int32(L, 2, (int *)&tag, "lua_fairygui_UIConfig_set_defaultTheme");
+        fairygui::UIConfig::defaultTheme = (fairygui::UIConfig::Theme)tag;
+    }
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+tolua_lerror:
+    tolua_error(L, "#ferror in function 'lua_fairygui_UIConfig_set_defaultTheme'.", &tolua_err);
+    return 0;
+#endif
+}
+
 static int lua_fairygui_UIConfig_set_tooltipsWin(lua_State* L)
 {
 #if COCOS2D_DEBUG >= 1
@@ -1670,6 +1697,7 @@ static int lua_register_fairygui_UIConfig(lua_State* tolua_S)
     tolua_variable(tolua_S, "popupMenu", nullptr, lua_fairygui_UIConfig_set_popupMenu);
     tolua_variable(tolua_S, "popupMenu_seperator", nullptr, lua_fairygui_UIConfig_set_popupMenu_seperator);
     tolua_variable(tolua_S, "onMusicCallback", nullptr, lua_fairygui_UIConfig_set_onMusicCallback);
+    tolua_variable(tolua_S, "defaultTheme", nullptr, lua_fairygui_UIConfig_set_defaultTheme);
     // function
     tolua_function(tolua_S, "registerFont", lua_fairygui_UIConfig_registerFont);
     tolua_endmodule(tolua_S);

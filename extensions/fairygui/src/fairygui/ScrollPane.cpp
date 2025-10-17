@@ -1366,6 +1366,7 @@ void ScrollPane::tweenUpdate(float dt)
 
     if (_tweenChange.x == 0 && _tweenChange.y == 0)
     {
+        _container->setPosition2(-_xPos, -_yPos);
         _tweening = 0;
         CALL_PER_FRAME_CANCEL(ScrollPane, tweenUpdate);
 

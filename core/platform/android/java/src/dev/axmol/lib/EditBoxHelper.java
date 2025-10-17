@@ -176,7 +176,7 @@ public class EditBoxHelper {
                                     EditBoxHelper.__editBoxEditingDidEnd(index, text, action);
                                 }
                             });
-                            mActivity.hideVirtualButton(false, false);
+//                            mActivity.hideVirtualButton(false, false);
                             mFrameLayout.setEnableForceDoLayout(false);
                             Log.d(TAG, "edit box lose focus");
                         }
@@ -442,12 +442,12 @@ public class EditBoxHelper {
 
         final InputMethodManager imm = (InputMethodManager) mActivity.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         AxmolEditBox editBox = mEditBoxArray.get(index);
-        if (null != editBox) {
+        if (null != editBox && editBox.isFocused()) {
             imm.hideSoftInputFromWindow(editBox.getWindowToken(), 0);
             mActivity.getGLSurfaceView().setSoftKeyboardShown(false);
             mActivity.getGLSurfaceView().requestFocus();
             // can take effect after GLSurfaceView has focus
-            mActivity.hideVirtualButton(false, false);
+//            mActivity.hideVirtualButton(false, false);
         }
     }
 

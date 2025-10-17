@@ -216,48 +216,19 @@ void LuaMinXmlHttpRequest::_sendRequest()
             }
 
             int statusCode = response->getResponseCode();
-
-            if (!response->isSucceed())
-            {
-                AXLOGD("Response failed, statusCode: {}", statusCode);
-                if (statusCode == 0)
-                {
-                    _errorFlag = true;
-                    _status    = 0;
-                    _statusText.clear();
-                }
-                // TODO: call back lua function
-                int handler = ax::ScriptHandlerMgr::getInstance()->getObjectHandler(
-                    (void*)this, ax::ScriptHandlerMgr::HandlerType::XMLHTTPREQUEST_READY_STATE_CHANGE);
-
-                if (0 != handler)
-                {
-                    AXLOGD("come in handler, handler is {}", handler);
-                    ax::CommonScriptData data(handler, "");
-                    ax::ScriptEvent event(ax::ScriptEventType::kCommonEvent, (void*)&data);
-                    ax::ScriptEngineManager::sendEventToLua(event);
-                }
-                return;
-            }
-
             // set header
             _httpHeader = response->getResponseHeaders();
 
             /** get the response data **/
             auto buffer = response->getResponseData();
 
-            if (statusCode == 200)
+            if (buffer && buffer->size()>0)
             {
                 // Succeeded
-                _status     = 200;
+                _status     = statusCode;
                 _readyState = DONE;
                 _data       = std::move(*buffer);
             }
-            else
-            {
-                _status = 0;
-            }
-
             // TODO: call back lua function
             int handler = ax::ScriptHandlerMgr::getInstance()->getObjectHandler(
                 (void*)this, ax::ScriptHandlerMgr::HandlerType::XMLHTTPREQUEST_READY_STATE_CHANGE);

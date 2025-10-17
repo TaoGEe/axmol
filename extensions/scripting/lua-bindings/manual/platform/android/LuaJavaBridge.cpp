@@ -557,7 +557,7 @@ int LuaJavaBridge::callLuaGlobalFunction(const char* functionName, const char* a
         int ok = lua_pcall(L, 1, 1, 0);
         if (ok == 0)
         {
-            if (tolua_isstring(L, -1, 0, NULL)) {
+            if (lua_isstring(L, -1)) {
                 *retstr = lua_tostring(L, -1);
                 ret = 0;
             }else {

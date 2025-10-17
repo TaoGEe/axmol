@@ -546,6 +546,10 @@ void GObject::addRelation(GObject* target, RelationType relationType, bool usePe
 {
     if (relationType == RelationType::Copy) {
         _relations->copyFrom(*target->relations());
+        for (int i = 0; i < 10; ++i) {
+            _gears[i] = target->_gears[i];
+            target->_gears[i] = nullptr;
+        }
     }else {
         _relations->add(target, relationType, usePercent);
     }
@@ -877,8 +881,22 @@ void GObject::setup_beforeAdd(ByteBuffer* buffer, int beginPos)
     buffer->readByte(); //filter
 
     const std::string& str = buffer->readS();
-    if (!str.empty())
+    if (!str.empty()) {
         _customData = Value(str);
+        std::string result = str;
+        result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+        std::stringstream ss(result);
+        std::string pair;
+        while (std::getline(ss, pair, ',')) {
+            size_t pos = pair.find('=');
+            if (pos != std::string::npos) {
+                std::string key = pair.substr(0, pos);
+                std::string value = pair.substr(pos + 1);
+                _customMap[key] = value; // 将键值对插入 map
+            }
+        }
+    }
+
 }
 
 void GObject::setup_afterAdd(ByteBuffer* buffer, int beginPos)

@@ -147,6 +147,7 @@ void GTextField::setup_beforeAdd(ByteBuffer* buffer, int beginPos)
     tf->face = buffer->readS();
     tf->fontSize = buffer->readShort();
     tf->color = (Color3B)buffer->readColor();
+    UIConfig::convertToThemeColor(tf->color);
     tf->align = (TextHAlignment)buffer->readByte();
     tf->verticalAlign = (TextVAlignment)buffer->readByte();
     tf->lineSpacing = buffer->readShort();

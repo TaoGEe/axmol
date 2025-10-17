@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
@@ -208,7 +209,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
     	Log.i(TAG, "onResume()");
         super.onResume();
 
-        this.hideVirtualButton(true, true);
+//        this.hideVirtualButton(true, true);
         AxmolEngine.onResume();
         mGLSurfaceView.handleOnResume();
         mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -276,6 +277,13 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void setOrientation( boolean portrait) {
+        if (portrait) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+    }
 
     protected ResizeLayout mFrameLayout = null;
     // ===========================================================

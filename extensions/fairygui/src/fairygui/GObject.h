@@ -7,6 +7,7 @@
 #include "cocos2d.h"
 #include "event/UIEventDispatcher.h"
 #include "gears/GearBase.h"
+#include <unordered_map>
 
 NS_FGUI_BEGIN
 
@@ -206,6 +207,7 @@ protected:
     bool _grayed;
     bool _finalGrayed;
 
+    std::unordered_map<std::string,std::string> _customMap;
 private:
     bool internalVisible() const;
     bool internalVisible2() const;
@@ -232,7 +234,9 @@ private:
     GGroup* _group;
     float _sizePercentInGroup;
     Relations* _relations;
+protected:
     GearBase* _gears[10];
+private:
     void* _data;
     ax::Value _customData;
     ax::Vec2 _dragTouchStartPos;

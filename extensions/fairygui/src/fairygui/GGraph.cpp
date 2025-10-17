@@ -118,7 +118,18 @@ void GGraph::updateShape()
     {
     case 1:
     {
-        if (_lineSize > 0)
+        if (_customMap.contains("radius")) {
+            float radius = std::stof(_customMap["radius"]);
+            radius = MIN(MIN(radius, _size.width/2), _size.height/2);
+            int segments = 30;
+            _shape->drawSolidCircle(Vec2(radius, radius), radius, 0, segments, 1, 1, _fillColor);
+            _shape->drawSolidCircle(Vec2(_size.width-radius, radius), radius, 0, segments, 1, 1, _fillColor);
+            _shape->drawSolidCircle(Vec2(_size.width-radius, _size.height-radius), radius, 0, segments, 1, 1, _fillColor);
+            _shape->drawSolidCircle(Vec2(radius, _size.height-radius), radius, 0, segments, 1, 1, _fillColor);
+            _shape->drawSolidRect(Vec2(radius, 0), Vec2(_size.width-radius, _size.height), _fillColor);
+            _shape->drawSolidRect(Vec2(0, radius), Vec2(_size.width, _size.height-radius), _fillColor);
+        }
+        else if (_lineSize > 0)
         {
             float wl = _size.width - _lineSize;
             float hl = _size.height - _lineSize;
@@ -249,6 +260,7 @@ void GGraph::setup_beforeAdd(ByteBuffer* buffer, int beginPos)
         _lineSize = buffer->readInt();
         _lineColor = (Color4B)buffer->readColor();
         _fillColor = (Color4B)buffer->readColor();
+        UIConfig::convertToThemeColor(_fillColor);
         if (buffer->readBool())
         {
             _cornerRadius = new float[4];

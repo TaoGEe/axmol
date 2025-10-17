@@ -10023,12 +10023,48 @@ static int lua_ax_fairygui_GTextField_finalize(lua_State* tolua_S)
     return 0;
 }
 
+int lua_ax_fairygui_GTextField_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"fgui.GTextField",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 0)
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GTextField_create'", nullptr);
+            return 0;
+        }
+        auto&& ret = fairygui::GTextField::create();
+        object_to_luaval<fairygui::GTextField>(tolua_S, "fgui.GTextField",(fairygui::GTextField*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "fgui.GTextField:create",argc, 0);
+    return 0;
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_fairygui_GTextField_create'.",&tolua_err);
+#endif
+    return 0;
+}
+
 int lua_register_ax_fairygui_GTextField(lua_State* tolua_S)
 {
     tolua_usertype(tolua_S,"fgui.GTextField");
     tolua_cclass(tolua_S,"GTextField","fgui.GTextField","fgui.GObject",nullptr);
 
     tolua_beginmodule(tolua_S,"GTextField");
+        tolua_function(tolua_S,"create",lua_ax_fairygui_GTextField_create);
         tolua_function(tolua_S,"isUBBEnabled",lua_ax_fairygui_GTextField_isUBBEnabled);
         tolua_function(tolua_S,"setUBBEnabled",lua_ax_fairygui_GTextField_setUBBEnabled);
         tolua_function(tolua_S,"getAutoSize",lua_ax_fairygui_GTextField_getAutoSize);
