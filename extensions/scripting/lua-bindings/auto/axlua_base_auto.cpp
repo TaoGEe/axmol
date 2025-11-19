@@ -91346,6 +91346,66 @@ int lua_ax_base_Camera_setDefaultViewport(lua_State* tolua_S)
 #endif
     return 0;
 }
+int lua_ax_base_Camera_setViewport(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::Camera* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"ax.Camera",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::Camera*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_base_Camera_setViewport'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+
+    if (argc == 4)
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "ax.GLView:setViewPortInPoints");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.GLView:setViewPortInPoints");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.GLView:setViewPortInPoints");
+
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.GLView:setViewPortInPoints");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Camera_setViewport'", nullptr);
+            return 0;
+        }
+        ax::RectI rect;
+        rect.set(arg0, arg1, arg2, arg3);
+        cobj->setViewport(rect);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ax.Camera:setViewport",argc, 1);
+    return 0;
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_base_Camera_setViewport'.",&tolua_err);
+#endif
+    return 0;
+}
 int lua_ax_base_Camera_getDefaultCamera(lua_State* tolua_S)
 {
     int argc = 0;
@@ -91464,6 +91524,7 @@ int lua_register_ax_base_Camera(lua_State* tolua_S)
         tolua_function(tolua_S,"initPerspective",lua_ax_base_Camera_initPerspective);
         tolua_function(tolua_S,"initOrthographic",lua_ax_base_Camera_initOrthographic);
         tolua_function(tolua_S,"applyViewport",lua_ax_base_Camera_applyViewport);
+        tolua_function(tolua_S,"setViewport",lua_ax_base_Camera_setViewport);
         tolua_function(tolua_S,"createPerspective", lua_ax_base_Camera_createPerspective);
         tolua_function(tolua_S,"createOrthographic", lua_ax_base_Camera_createOrthographic);
         tolua_function(tolua_S,"create", lua_ax_base_Camera_create);

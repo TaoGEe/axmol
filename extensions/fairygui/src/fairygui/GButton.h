@@ -63,6 +63,7 @@ protected:
     virtual void constructExtension(ByteBuffer* buffer) override;
     virtual void setup_afterAdd(ByteBuffer* buffer, int beginPos) override;
     virtual void handleControllerChanged(GController* c) override;
+    virtual void handleGrayedChanged() override;
 
     void setState(const std::string& value);
     void setCurrentState();

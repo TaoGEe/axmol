@@ -107,6 +107,10 @@ public:
     static const Viewport& getDefaultViewport();
     static void setDefaultViewport(const Viewport& vp);
 
+    void setViewport(const Viewport& vp) {
+        _viewport = vp;
+    }
+    
     /**
      * Get the default camera of the current running scene.
      */
@@ -347,6 +351,7 @@ public:
 protected:
     static Camera* _visitingCamera;
     static Viewport _defaultViewport;
+    Viewport _viewport;
 
     //* Scene that owns this camera.
     Scene* _scene = nullptr;

@@ -119,15 +119,48 @@ void GGraph::updateShape()
     case 1:
     {
         if (_customMap.contains("radius")) {
+            float x = 0;
+            float y = 0;
+            float w = _size.width;
+            float h = _size.height;
             float radius = std::stof(_customMap["radius"]);
-            radius = MIN(MIN(radius, _size.width/2), _size.height/2);
+            float r = std::min(radius, std::min(w, h) / 2.0f)-0.1;
             int segments = 30;
-            _shape->drawSolidCircle(Vec2(radius, radius), radius, 0, segments, 1, 1, _fillColor);
-            _shape->drawSolidCircle(Vec2(_size.width-radius, radius), radius, 0, segments, 1, 1, _fillColor);
-            _shape->drawSolidCircle(Vec2(_size.width-radius, _size.height-radius), radius, 0, segments, 1, 1, _fillColor);
-            _shape->drawSolidCircle(Vec2(radius, _size.height-radius), radius, 0, segments, 1, 1, _fillColor);
-            _shape->drawSolidRect(Vec2(radius, 0), Vec2(_size.width-radius, _size.height), _fillColor);
-            _shape->drawSolidRect(Vec2(0, radius), Vec2(_size.width, _size.height-radius), _fillColor);
+
+            // 四个角的圆心
+            ax::Vec2 centers[4] = {
+                    ax::Vec2(x + r,     y + r),      // 左下
+                    ax::Vec2(x + w - r, y + r),      // 右下
+                    ax::Vec2(x + w - r, y + h - r),  // 右上
+                    ax::Vec2(x + r,     y + h - r),  // 左上
+            };
+
+            // 生成圆角点
+            std::vector<ax::Vec2> points;
+            auto drawCorner = [&](const ax::Vec2& center, float startAngle) {
+                for (int i = 0; i <= segments; ++i) {
+                    float angle = startAngle + (M_PI_2) * (float(i) / segments);
+                    points.push_back(ax::Vec2(center.x + r * cosf(angle), center.y + r * sinf(angle)));
+                }
+            };
+
+            // 左下角（180°~270°）
+            drawCorner(centers[0], M_PI);
+            // 右下角（270°~360°）
+            drawCorner(centers[1], M_PI * 1.5f);
+            // 右上角（0°~90°）
+            drawCorner(centers[2], 0.0f);
+            // 左上角（90°~180°）
+            drawCorner(centers[3], M_PI_2);
+
+            // 填充
+            if (_fillColor.a > 0) {
+                _shape->drawSolidPoly(points.data(), points.size(), _fillColor);
+            }
+            // 边框
+            if (_lineSize > 0 && _lineColor.a > 0) {
+                _shape->drawPoly(points.data(), points.size(), true, _lineColor, _lineSize);
+            }
         }
         else if (_lineSize > 0)
         {

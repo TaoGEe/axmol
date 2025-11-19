@@ -51,6 +51,7 @@ void FUIInput::applyTextFormat()
     setFontSize(_textFormat->fontSize);
     setPlaceholderFontSize(_textFormat->fontSize);
     setFontColor(_textFormat->color);
+    setTextHorizontalAlignment((TextHAlignment)_textFormat->align);
     //setPlaceholderFontColor(_textFormat->color);
 }
 
@@ -72,8 +73,8 @@ void FUIInput::setPassword(bool value)
 
 void FUIInput::setKeyboardType(int value)
 {
-    //if (!_password)
-        //setInputMode((ui::EditBox::InputMode)value);
+    if (!_password)
+        setInputMode((ui::EditBox::InputMode)value);
 }
 
 void FUIInput::openKeyboard()
