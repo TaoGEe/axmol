@@ -10699,13 +10699,14 @@ int lua_ax_fairygui_GGraph_drawRect(lua_State* tolua_S)
 #endif
 
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 5)
+    if (argc >= 5)
     {
         double arg0;
         double arg1;
         int arg2;
         ax::Color4B arg3;
         ax::Color4B arg4;
+        double arg5;
 
         ok &= luaval_to_number(tolua_S, 2,&arg0, "fgui.GGraph:drawRect");
 
@@ -10716,12 +10717,16 @@ int lua_ax_fairygui_GGraph_drawRect(lua_State* tolua_S)
         ok &=luaval_to_color4b(tolua_S, 5, &arg3, "fgui.GGraph:drawRect");
 
         ok &=luaval_to_color4b(tolua_S, 6, &arg4, "fgui.GGraph:drawRect");
+        if (argc == 6)
+        {
+            ok &= luaval_to_number(tolua_S, 7,&arg5, "fgui.GGraph:drawRect");
+        }
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GGraph_drawRect'", nullptr);
             return 0;
         }
-        cobj->drawRect(arg0, arg1, arg2, arg3, arg4);
+        cobj->drawRect(arg0, arg1, arg2, arg3, arg4, arg5);
         lua_settop(tolua_S, 1);
         return 1;
     }

@@ -130,6 +130,9 @@ public:
 
     const ResponseHeaderMap& getResponseHeaders() const { return _responseHeaders; }
 
+    // Decompression methods
+    bool decompressResponseData();
+
 private:
     void setResponseCode(int value) { _responseCode = value; }
 
@@ -175,6 +178,7 @@ private:
      * @param url the actually url to request
      * @param redirect wither redirect
      */
+    // Custom setLocation to use decompression
     bool setLocation(std::string_view url, bool redirect)
     {
         if (redirect)
@@ -224,6 +228,9 @@ private:
     bool validateUri() const { return _requestUri.isValid(); }
 
     const Uri& getRequestUri() const { return _requestUri; }
+
+    bool decompressGzip();
+    bool decompressDeflate();
 
     static int on_header_field(llhttp_t* context, const char* at, size_t length)
     {

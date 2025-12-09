@@ -328,11 +328,14 @@ void HttpClient::handleNetworkEvent(yasio::io_event* event)
                     obs.write_bytes(header);
                     obs.write_bytes("\r\n");
 
-                    if (cxx20::ic::starts_with(cxx17::string_view{header}, "User-Agent:"_sv))
+                    if (header.compare(0, 12, "User-Agent:") == 0 || 
+                        header.compare(0, 12, "user-agent:") == 0)
                         headerFlags |= HeaderFlag::UESR_AGENT;
-                    else if (cxx20::ic::starts_with(cxx17::string_view{header}, "Content-Type:"_sv))
+                    else if (header.compare(0, 13, "Content-Type:") == 0 || 
+                             header.compare(0, 13, "content-type:") == 0)
                         headerFlags |= HeaderFlag::CONTENT_TYPE;
-                    else if (cxx20::ic::starts_with(cxx17::string_view{header}, "Accept:"_sv))
+                    else if (header.compare(0, 7, "Accept:") == 0 || 
+                             header.compare(0, 7, "accept:") == 0)
                         headerFlags |= HeaderFlag::ACCEPT;
                 }
             }
@@ -366,7 +369,7 @@ void HttpClient::handleNetworkEvent(yasio::io_event* event)
                 obs.write_bytes(strContentLength);
 
                 if (requestData && requestDataSize > 0)
-                    obs.write_bytes(cxx17::string_view{requestData, static_cast<size_t>(requestDataSize)});
+                    obs.write_bytes(requestData, static_cast<size_t>(requestDataSize));
             }
             else
             {
@@ -445,6 +448,9 @@ void HttpClient::finishResponse(HttpResponse* response)
         for (auto cookieIt = cookieRange.first; cookieIt != cookieRange.second; ++cookieIt)
             _cookie->updateOrAddCookie(cookieIt->second, response->_requestUri);
     }
+    
+    // Try to decompress the response data if needed
+    response->decompressResponseData();
 
     if (!syncState)
     {

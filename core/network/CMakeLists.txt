@@ -76,6 +76,7 @@ else()
         list(APPEND _AX_NETWORK_SRC
             network/HttpClient.cpp
             network/HttpCookie.cpp
+            network/HttpResponse.cpp
         )
     endif()
 

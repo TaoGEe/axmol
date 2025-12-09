@@ -15,7 +15,7 @@ public:
 
     CREATE_FUNC(GGraph);
 
-    void drawRect(float aWidth, float aHeight, int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor);
+    void drawRect(float aWidth, float aHeight, int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor, float radius=0);
     void drawEllipse(float aWidth, float aHeight, int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor);
     void drawPolygon(int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor, const ax::Vec2* points, int count);
     void drawRegularPolygon(int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor, int sides, float startAngle = 0, const float* distances = nullptr, int distanceCount = 0);
@@ -34,7 +34,7 @@ protected:
 
 private:
     void updateShape();
-
+    float _radius;
     int _type;
     ax::Color4B _lineColor;
     ax::Color4B _fillColor;

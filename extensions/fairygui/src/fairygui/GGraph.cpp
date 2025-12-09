@@ -20,7 +20,8 @@ GGraph::GGraph() : _shape(nullptr),
                    _fillColor(Color4B::WHITE),
                    _cornerRadius(nullptr),
                    _polygonPoints(nullptr),
-                   _distances(nullptr)
+                   _distances(nullptr),
+                   _radius(0)
 {
     _touchDisabled = true;
 }
@@ -40,7 +41,7 @@ void GGraph::handleInit()
     _displayObject = _shape;
 }
 
-void GGraph::drawRect(float aWidth, float aHeight, int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor)
+void GGraph::drawRect(float aWidth, float aHeight, int lineSize, const ax::Color4B& lineColor, const ax::Color4B& fillColor, float radius)
 {
     _type = 0; //avoid updateshape call in handleSizeChange
     setSize(aWidth, aHeight);
@@ -48,6 +49,7 @@ void GGraph::drawRect(float aWidth, float aHeight, int lineSize, const ax::Color
     _lineSize = lineSize;
     _lineColor = lineColor;
     _fillColor = fillColor;
+    _radius = radius;
     updateShape();
 }
 
@@ -118,12 +120,12 @@ void GGraph::updateShape()
     {
     case 1:
     {
-        if (_customMap.contains("radius")) {
+        if (_customMap.contains("radius") || _radius > 0) {
             float x = 0;
             float y = 0;
             float w = _size.width;
             float h = _size.height;
-            float radius = std::stof(_customMap["radius"]);
+            float radius = _radius > 0 ? _radius : std::stof(_customMap["radius"]);
             float r = std::min(radius, std::min(w, h) / 2.0f)-0.1;
             int segments = 30;
 
